@@ -3,6 +3,11 @@ import { cookies } from 'next/headers';
 import fs from 'fs/promises';
 import path from 'path';
 
+interface User {
+  email: string;
+  vip_subscription: boolean;
+}
+
 export async function GET() {
   try {
     const userEmail = cookies().get('userEmail')?.value;
@@ -13,9 +18,9 @@ export async function GET() {
 
     const filePath = path.join(process.cwd(), 'data', 'users.json');
     const fileContents = await fs.readFile(filePath, 'utf8');
-    const users = JSON.parse(fileContents);
+    const users: User[] = JSON.parse(fileContents);
 
-    const currentUser = users.find((user) => user.email === userEmail);
+    const currentUser = users.find((user: User) => user.email === userEmail);
 
     if (!currentUser) {
       return NextResponse.json({ vip_subscription: false, message: 'User not found' }, { status: 404 });
