@@ -4,8 +4,6 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs/promises';
 import path from 'path';
 
-export const dynamic = 'force-dynamic'; // Force server-side rendering
-
 const USERS_FILE_PATH = path.join(process.cwd(), 'data', 'users.json');
 
 async function readUsersFile() {
@@ -15,11 +13,15 @@ async function readUsersFile() {
 
 export async function GET() {
   try {
-    const cookieStore = cookies();
-    const token = cookieStore.get('token')?.value;
+    const token = cookies().get('token')?.value;
 
     if (!token) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    }
+
+    if (!process.env.JWT_SECRET) {
+      console.error('JWT_SECRET is not defined in environment variables.');
+      return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
