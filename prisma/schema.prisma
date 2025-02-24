@@ -8,21 +8,20 @@ datasource db {
 }
 
 model Course {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String
-  price       Float
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          Int      @id @default(autoincrement()) // Primary key with auto-increment
+  title       String                               // Course title
+  description String                               // Course description
+  price       Float                                // Course price
+  createdAt   DateTime @default(now())             // Timestamp when the course is created
+  updatedAt   DateTime @updatedAt                  // Timestamp automatically updated on modification
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  email     String   @unique
-  password  String
-  gender    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int      @id @default(autoincrement()) // Primary key with auto-increment
+  name      String   @unique                       // Unique user name
+  email     String   @unique                       // Unique user email
+  password  String                                // User password
+  gender    String                                // User gender
+  createdAt DateTime @default(now())              // Timestamp when the user is created
+  updatedAt DateTime @updatedAt                   // Timestamp automatically updated on modification
 }
-
