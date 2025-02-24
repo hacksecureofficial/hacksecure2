@@ -5,7 +5,10 @@ const nextConfig = {
 
   // Configure allowed external image domains
   images: {
-    domains: ["hebbkx1anhila5yf.public.blob.vercel-storage.com"],
+    domains: [
+      "hebbkx1anhila5yf.public.blob.vercel-storage.com",
+      "lh3.googleusercontent.com", // ✅ Added for Google profile images
+    ],
   },
 
   // Environment variables accessible in the application
