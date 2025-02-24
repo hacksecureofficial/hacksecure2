@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  
+  "scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start"
+}
+
   reactStrictMode: true,
   images: {
     domains: ["hebbkx1anhila5yf.public.blob.vercel-storage.com"], // Added external image domain
