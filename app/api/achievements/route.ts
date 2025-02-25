@@ -1,17 +1,65 @@
-import { NextResponse } from "next/server";
+import { cookies } from "next/headers"
+import Image from "next/image"
 
-const achievements = [
-  {
-    id: "9939ceda-9aa8-4b68-a83c-6543d4544e12",
-    userId: "fa2a00e6-a50d-4072-bc3f-a09114458f7d",
-    firstName: "Aditya",
-    lastName: "Singh",
-    date: "1/20/2025",
-    score: 10,
-    imageUrl: "https://via.placeholder.com/96", // Replace with actual image if available
-  },
-];
-
-export async function GET() {
-  return NextResponse.json(achievements);
+interface Achievement {
+  id: string
+  userId: string
+  firstName: string
+  lastName: string
+  date: string
+  score: number
+  imageUrl: string
 }
+
+async function getAchievements(): Promise<Achievement[]> {
+  try {
+    const cookieStore = cookies()
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/achievements`, {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    })
+
+    if (!response.ok) throw new Error("Failed to fetch achievements")
+    return response.json()
+  } catch (error) {
+    console.error("Error fetching achievements:", error)
+    return []
+  }
+}
+
+export default async function AchievementsPage() {
+  const achievements = await getAchievements()
+
+  if (achievements.length === 0) {
+    return (
+      <div className="p-6">
+        <h1 className="text-3xl font-bold mb-4">Achievements</h1>
+        <p>No achievements found.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-4">Achievements</h1>
+      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {achievements.map((ach) => (
+          <li key={ach.id} className="p-4 bg-white rounded-2xl shadow-lg flex flex-col items-center">
+            <Image
+              src={ach.imageUrl || "/placeholder.svg"}
+              alt={`${ach.firstName} ${ach.lastName}`}
+              width={96}
+              height={96}
+              className="rounded-full mb-3"
+            />
+            <p className="font-semibold">{`${ach.firstName} ${ach.lastName}`}</p>
+            <p className="text-sm text-gray-500">Date: {ach.date}</p>
+            <p className="text-lg font-bold">Score: {ach.score}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
