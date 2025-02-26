@@ -4,13 +4,24 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs/promises';
 import path from 'path';
 
-export const dynamic = 'force-dynamic'; // Force server-side rendering
-
 const USERS_FILE_PATH = path.join(process.cwd(), 'data', 'users.json');
 
-async function readUsersFile() {
-  const data = await fs.readFile(USERS_FILE_PATH, 'utf8');
-  return JSON.parse(data);
+// Type definition for user data
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  password?: string; // Will be omitted when responding
+}
+
+async function readUsersFile(): Promise<User[]> {
+  try {
+    const data = await fs.readFile(USERS_FILE_PATH, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading users file:', error);
+    return [];
+  }
 }
 
 export async function GET() {
@@ -22,7 +33,20 @@ export async function GET() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      console.error('JWT_SECRET is not defined in environment variables.');
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+    }
+
+    let decoded: any;
+    try {
+      decoded = jwt.verify(token, jwtSecret);
+    } catch (err) {
+      console.error('Invalid token:', err);
+      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+    }
+
     const users = await readUsersFile();
     const user = users.find((u) => u.id === decoded.userId);
 
@@ -32,8 +56,9 @@ export async function GET() {
 
     const { password, ...userWithoutPassword } = user;
     return NextResponse.json(userWithoutPassword);
+
   } catch (error) {
     console.error('Error in user API:', error);
-    return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
+    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
   }
 }
