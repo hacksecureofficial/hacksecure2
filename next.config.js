@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "server"
   // Enable React's Strict Mode for highlighting potential problems
   reactStrictMode: true,
 
