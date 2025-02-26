@@ -8,7 +8,7 @@ interface User {
   vip_subscription: boolean;
 }
 
-export const dynamic = 'force-dynamic'; // Force dynamic rendering to avoid static generation issues
+// Removed `export const dynamic = 'force-dynamic'`
 
 export async function GET() {
   try {
