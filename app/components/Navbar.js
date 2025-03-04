@@ -27,17 +27,9 @@ export default function Navbar() {
       })
       if (res.ok) {
         setUser(null)
-        router.push('/signin')
       }
     } catch (error) {
       console.error('Error logging out:', error)
-    }
-  }
-
-  const handleLinkClick = (e, path) => {
-    if (!user) {
-      e.preventDefault()
-      router.push('/signin')
     }
   }
 
@@ -46,16 +38,10 @@ export default function Navbar() {
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">HACK SEC</Link>
         <div className="hidden md:flex space-x-4">
-          <Link href="/coming-soon" onClick={(e) => handleLinkClick(e, '/courses')} className="hover:text-gray-300">Courses</Link>
-          <Link href="/about" onClick={(e) => handleLinkClick(e, '/about')} className="hover:text-gray-300">About us</Link>
-          <Link href="/contact" onClick={(e) => handleLinkClick(e, '/contact')} className="hover:text-gray-300">Contact us</Link>
-          {/* <Link href="/courses/payment" onClick={(e) => handleLinkClick(e, '/contact')} className="hover:text-gray-300">VIP</Link> */}
-          {/* <Link href="/coming-soon" onClick={(e) => handleLinkClick(e, '/contact')} className="hover:text-gray-300">VIP</Link> */}
-          {/* <Link href="/coming-soon" onClick={(e) => handleLinkClick(e, '/contact')} className="hover:text-gray-300">Career Opportunities</Link> */}
-          
-          {/* <Link href="http://localhost:3001" onClick={(e) => handleLinkClick(e, '/contact')} className="hover:text-gray-300">Labs & Challenges</Link> */}
-          <Link href="/coming-soon" onClick={(e) => handleLinkClick(e, '/contact')} className="hover:text-gray-300">Achievements</Link>
-          
+          <Link href="/coming-soon" className="hover:text-gray-300">Courses</Link>
+          <Link href="/about" className="hover:text-gray-300">About us</Link>
+          <Link href="/contact" className="hover:text-gray-300">Contact us</Link>
+          <Link href="/coming-soon" className="hover:text-gray-300">Achievements</Link>
         </div>
         <div className="flex items-center space-x-4">
           {user ? (
